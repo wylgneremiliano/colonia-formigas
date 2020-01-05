@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1578099750 source:c:\users\wylgn\onedrive\documentos\colonia-formigas\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<time.h>
+	<string.h>
+
