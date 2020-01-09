@@ -21,6 +21,8 @@ typedef struct
     float inverso;
     float feromonio;
     float inv_ferom;
+    float probabilidade;
+    float porcentagem;
 } iteracoes;
 int numeroDeCidades = 5; // Constante para definir a quantidade de cidades
 iteracoes dEntreTodasCidades[TAM];
@@ -46,35 +48,55 @@ void criar_cidade()
         printf("Arquivo nao encontrado!\n");
     }
 }
-void calculaDistancias(int n)
-{
+void printTabela(){
+    for(int i = 0; i < (numeroDeCidades * numeroDeCidades) - numeroDeCidades; i++){
+            printf("---------------------------------------------------\n");
+            printf("Cidade %d\n", dEntreTodasCidades[i].c1);
+            printf("Cidade %d\n", dEntreTodasCidades[i].c2);
+            printf("Distancia: %.3f\n", dEntreTodasCidades[i].distancia);
+            printf("Inverso da distancia: %.3f\n", dEntreTodasCidades[i].inverso);
+            printf("Inverso da distancia vezes feromonio: %.3f\n", dEntreTodasCidades[i].inv_ferom);
+            printf("Probabilidade: %.3f\n", dEntreTodasCidades[i].probabilidade);
+            printf("Porcentagem: %.2f %%\n", dEntreTodasCidades[i].porcentagem);
+            printf("---------------------------------------------------\n");
+    }
+}
+void calculaDistancias(int n){
     cidade c1, c2;
     float hipot;
+    int i, j;
+    int x= 0;
     printf("---------------------------------------------------\n");
-    for(int i = 0; i < numeroDeCidades ; i++)
-    {
-        for(int j = 0; j < numeroDeCidades; j++)
-        {
+    for(i = 0 ; i < numeroDeCidades ; i++){
+        for(j = 0; j < numeroDeCidades; j++){
             if(j == i)
                 j++;
-            if(n == 0)
-                dEntreTodasCidades[i].feromonio = 0.1;
-
-            dEntreTodasCidades[i].c1 = cidades[i].n;
-            dEntreTodasCidades[i].c2 = cidades[j].n;
+            if(n == 0){
+                dEntreTodasCidades[x].feromonio = 0.1;
+                dEntreTodasCidades[x].probabilidade = 0;
+            }
+            dEntreTodasCidades[x].c1 = cidades[i].n;
+            dEntreTodasCidades[x].c2 = cidades[j].n;
             float x1 = 0, y1 = 0;
             x1 = fabs(cidades[i].x - cidades[j].x);
             y1 = fabs(cidades[i].y - cidades[j].y);
             hipot = (x1 * x1) + (y1 * y1);
-            dEntreTodasCidades[i].distancia = sqrt(hipot);
-            dEntreTodasCidades[i].inverso =  1 / dEntreTodasCidades[i].distancia;
-            dEntreTodasCidades[i].inv_ferom = dEntreTodasCidades[i].feromonio * dEntreTodasCidades[i].inverso;
-            printf("%d\n", dEntreTodasCidades[i].c1);
-            printf("%d\n", dEntreTodasCidades[i].c2);
-            printf("%.3f\n", dEntreTodasCidades[i].distancia);
-            printf("%.3f\n", dEntreTodasCidades[i].inverso);
-            printf("%.3f\n", dEntreTodasCidades[i].inv_ferom);
+            dEntreTodasCidades[x].distancia = sqrt(hipot);
+            dEntreTodasCidades[x].inverso =  1 / dEntreTodasCidades[x].distancia;
+            dEntreTodasCidades[x].inv_ferom = dEntreTodasCidades[x].feromonio * dEntreTodasCidades[x].inverso;
+            dEntreTodasCidades[x].probabilidade += dEntreTodasCidades[x].inv_ferom;
+            printf("%d\n", dEntreTodasCidades[x].c1);
+            printf("%d\n", dEntreTodasCidades[x].c2);
+            printf("%.3f\n", dEntreTodasCidades[x].distancia);
+            printf("%.3f\n", dEntreTodasCidades[x].inverso);
+            printf("%.3f\n", dEntreTodasCidades[x].inv_ferom);
+            printf("%.3f\n", dEntreTodasCidades[x].probabilidade);
+            x++;
         }
+        dEntreTodasCidades[x-1].probabilidade = dEntreTodasCidades[0].inv_ferom/dEntreTodasCidades[x-1].probabilidade;
+        dEntreTodasCidades[x-1].porcentagem = dEntreTodasCidades[x-1].probabilidade * 100;
         printf("---------------------------------------------------\n");
+
     }
+    printTabela();
 }
